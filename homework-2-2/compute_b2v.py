@@ -6,7 +6,7 @@ from scipy.integrate import trapezoid
 #For sigma: 3.4 Angstroms = 3.4E-10 meters
 sigma = 3.4
 k_b = 8.617E-5      #eV/k
-N_a = 6.022E23
+N_a = 6.022E23      #Avogadros number
 #1. Hard Sphere Potential
 def hard_sphere(r, sigma=3.4):
     """Calculates the hard sphere potential. 
@@ -105,9 +105,9 @@ plt.plot(temperatures, B2V_hard_sphere, label='Hard Sphere')
 plt.plot(temperatures, B2V_square_well, label='Square Well')
 plt.plot(temperatures, B2V_lennard_jones, label='Lennard-Jones')
 plt.axhline(0, color='black')
-plt.title('Second Virial Coefficient B2V as a Function of Temperature')
+plt.title('Second Virial Coefficient $B_2V$ as a Function of Temperature')
 plt.xlabel('Temperature (K)')
-plt.ylabel('B2V (Å³/mol)')
+plt.ylabel('$B_2V$ ($Å^3/mol$)')
 plt.legend()
 plt.grid()
 plt.xlim(100, 800)
