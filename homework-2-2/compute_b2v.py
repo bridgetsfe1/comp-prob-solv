@@ -75,7 +75,6 @@ def compute_B2V(potential_function, temp):
 
     return B2V
 
-#Q: N_a part?
 B2V_hard_sphere = compute_B2V(hard_sphere_potential, temp=100)
 print(B2V_hard_sphere)
 B2V_square_well = compute_B2V(square_well_potential, temp =100)
