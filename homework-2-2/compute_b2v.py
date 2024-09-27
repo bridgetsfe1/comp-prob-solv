@@ -2,6 +2,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import trapezoid
+import pandas as pd
 
 #For sigma: 3.4 Angstroms = 3.4E-10 meters
 sigma = 3.4
@@ -83,7 +84,7 @@ B2V_lennard_jones = compute_B2V(lennard_jones_potential, temp =100)
 print(B2V_lennard_jones)
 
 # Range of temperatures
-temperatures = np.linspace(100, 800, 100)
+temperatures = np.linspace(100, 800, 701)
 B2V_hard_sphere = []
 B2V_square_well = []
 B2V_lennard_jones = []
@@ -112,3 +113,18 @@ plt.grid()
 plt.xlim(100, 800)
 plt.show()
 plt.savefig("B2V_Temp")
+
+# Create a DataFrame to hold the temperature and B2V values
+data = {
+    'Temperature (K)': temperatures,
+    'B2V (Hard Sphere (Å^3/mol))': B2V_hard_sphere,
+    'B2V (Square Well(Å^3/mol))': B2V_square_well,
+    'B2V (Lennard-Jones(Å^3/mol))': B2V_lennard_jones
+}
+
+df = pd.DataFrame(data)
+
+# Write the DataFrame to a CSV file
+df.to_csv('B2V_vs_Temperature.csv', index=False)
+
+print("CSV file 'B2V_vs_Temperature.csv' has been created successfully.")
