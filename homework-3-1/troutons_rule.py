@@ -99,6 +99,7 @@ CI_int = confidence_interval_intercept(x, residuals, 0.95)
 
 
 #Plotting results
+plt.figure(constrained_layout=True)
 x_range = np.linspace(x.min(), x.max(), 100)
 y_range = intercept + slope * x_range
 plt.plot(x_range, y_range, color='black', linewidth=2, label='$H_v = a*T_b + b$')
@@ -110,12 +111,12 @@ plt.fill_between(x, (slope - CI_slope) * x + (intercept - CI_int),
 # Scatter plot with points color-coded by class
 sns.scatterplot(x=x, y=y, hue=df["Class"], palette='bright')
 
-plt.text(0.95, 0.05, f'a: {slope:.3f} ± {CI_slope:.3f}\nb: {intercept:.3f} ± {CI_int:.3f}',
+plt.text(0.95, 0.05, f'a: {slope:.3f} ± {CI_slope:.3f} J/mol*K\nb: {intercept/1000:.3f} ± {CI_int/1000:.3f} KJ/mol',
          fontsize=10, ha='right', va='bottom', transform=plt.gca().transAxes)
 
 plt.title("Trouton's Rule")
-plt.xlabel('Temperature (K)')
-plt.ylabel('Enthalpy (J/mol)')
+plt.xlabel('Temperature $T_b$ (K)')
+plt.ylabel('Enthalpy $H_v$ (J/mol)')
 plt.legend()
 plt.grid()
 
