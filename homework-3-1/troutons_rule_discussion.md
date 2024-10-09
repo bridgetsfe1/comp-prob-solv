@@ -1,0 +1,6 @@
+# Slope Interpretation
+slope 'a' can be interpreted as an approximation of the entropy of vaporization. Thus, because the slope of this relationship is positive, this means there is a positive corrleation between boiling points and enthalpy of vaporization. The entropy of vaporization for this data set falls in a range of approximately 97 to 109 J/mol-K for the liquids provided, which is slightly higher than the expected 85-88 J/mol-K determined by Trouton's Rule. 
+
+
+## Discussion
+It is known that the slope of this relationship correlates to the entropy of vaporization, which is a constant value of ~85-88 J/mol-K for many substances. If this value was true for all substances, the slope would in this range. Due to deviations, specifically in some metals and imperfect liquids, the model predicts a larger entropy of vaporization, falling in a range approximately 15 J/mol-K higher. Though this isn't much larger than expected, the error in some metals can be attributed to these deviations. The addition of more data points could be a way to increase the accuracy of this model. Also, this model only holds true for non-associating liquids, so making sure the model is only used for these types of liquids could improve the accuracy. 
