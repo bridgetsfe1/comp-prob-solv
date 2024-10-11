@@ -1,28 +1,38 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.constants import k
+import pandas as pd
 
-T = 300
-beta = 1 / (k * T)
+temperatures = np.linspace(300, 2000, 100) 
+beta = 1 / (k * temperatures)
 
 def thermo(Z, T):
     """Calculates Internal Energy, Free Energy, and Entropy based on the partition function of a system
     Parameters:
-        Z: Partition function
+        Z: (nparray) Partition function
+        T: (nparray) temperatures
     Returns:
-        U: float, Internal Energy
-        F: float, free energy
-        S: float, Entropy
+        nparray: Internal Energy
+        nparray: Free energy
+        nparray: Entropy
     """
     # Internal energy (U)
-    U = np.gradient(np.log(Z), 1 / (k * T)) * (-1)
-    #Free Energy (F)
+    U = -np.gradient(np.log(Z), 1 / (k * T))
+    # Free Energy (F)
     F = -k * T * np.log(Z)
-    #Entropy (S)
-    S = np.gradient(F, T) * (-1)
+    # Entropy (S)
+    S = -np.gradient(F, T)
     return U, F, S
 
 def isolated_partition_function(energies, degeneracies, T):
+    """Calculates isolated partition function.
+    Parameters: 
+        energies (list): List of energy values
+        degeneracies (list): List of degeneracies (equal value of energies)
+        T (nparray): array of temepratures over which the partition fn is calculated. 
+    Returns:
+        nparray: Isolated partition function.
+    """
     Z_iso = 0.0
 
     for E, g in zip(energies, degeneracies):
@@ -30,11 +40,19 @@ def isolated_partition_function(energies, degeneracies, T):
     
     return Z_iso
 
-Z_iso = isolated_partition_function(energies = [0]*14, degeneracies= [1]*14, T=300)
-thermo_iso = thermo(Z_iso, T)
+Z_iso = isolated_partition_function(energies = [0]*14, degeneracies= [1]*14, T=temperatures)
+U_i, F_i, S_i = thermo(Z_iso, temperatures)
 
 
 def soc_partition_function(energies, degeneracies, T):
+    """Calculates SOC partition function.
+    Parameters: 
+        energies (list): List of energy values
+        degeneracies (list): List of degeneracies (equal value of energies)
+        T (nparray): array of temepratures over which the partition fn is calculated. 
+    Returns:
+        nparray: SOC partition function.
+    """
     Z_soc = 0.0
 
     for E, g in zip(energies, degeneracies):
@@ -42,10 +60,18 @@ def soc_partition_function(energies, degeneracies, T):
     
     return Z_soc
 
-Z_soc = soc_partition_function(energies = [0]*6 + [4.48609*(10**-20)]*8, degeneracies = [1]*14, T=300)
-thermo_soc = thermo(Z_soc, T)
+Z_soc = soc_partition_function(energies = [0]*6 + [4.48609*(10**-20)]*8, degeneracies = [1]*14, T=temperatures)
+U_soc, F_soc, S_soc = thermo(Z_soc, temperatures)
 
 def cfs_partition_function(energies, degeneracies, T):
+    """Calculates SOC+CFS partition function.
+    Parameters: 
+        energies (list): List of energy values
+        degeneracies (list): List of degeneracies (equal value of energies)
+        T (nparray): array of temepratures over which the partition fn is calculated. 
+    Returns:
+        nparray: SOC+CFS partition function.
+    """
     Z_cfs = 0.0
 
     for E, g in zip(energies, degeneracies):
@@ -53,46 +79,32 @@ def cfs_partition_function(energies, degeneracies, T):
     
     return Z_cfs
 
-Z_cfs = cfs_partition_function(energies = [0]*4 + [1.92261*(10**-20)]*2 + [4.00554*(10**-20)]*2 + [5.12697*(10**-20)]*4 + [7.37001*(10**-20)]*2, degeneracies = [1]*14, T=300)
-thermo_cfs = thermo(Z_cfs, T)
+Z_cfs = cfs_partition_function(energies = [0]*4 + [1.92261*(10**-20)]*2 + [4.00554*(10**-20)]*2 + [5.12697*(10**-20)]*4 + [7.37001*(10**-20)]*2, degeneracies = [1]*14, T=temperatures)
+U_cfs, F_cfs, S_cfs = thermo(Z_cfs, temperatures)
 
+#All these functions do the same, could make one function for calculating the partition function and have different energy inputs (followed instructions to make 3 separate fns, but a way to improve efficiency!)
 
-temperatures = np.linspace(300, 2000, 100) 
+temperatures = np.linspace(300, 2000, 100)  
 
-U_isolated = []
-F_isolated = []
-S_isolated = []
+all_cases = {
+    "U (iso)": U_i,
+    "U (SOC)": U_soc,
+    "U (SOC+CFS)":U_cfs,
+    "F (iso)": F_i, 
+    "F (SOC)": F_soc, 
+    "F (SOC+CFS)": F_cfs,
+    "S (iso)": S_i, 
+    "S (SOC)": S_soc, 
+    "S (SOC+CFS)":S_cfs
+}
 
-U_soc = []
-F_soc = []
-S_soc = []
-
-U_cfs = []
-F_cfs =[]
-S_cfs =[]
-
-for T in temperatures:
-    U_i, F_i, S_i = thermo(Z_iso, T)
-    U_isolated.append(U_i)
-    F_isolated.append(F_i)
-    S_isolated.append(S_i)
-
-    U_s, F_s, S_s = thermo(Z_soc, T)
-    U_soc.append(U_s)
-    F_soc.append(F_s)
-    S_soc.append(S_s)
-
-    U_c, F_c, S_c = thermo(Z_cfs, T)
-    U_cfs.append(U_c)
-    F_cfs.append(F_c)
-    S_cfs.append(S_c)    
-
+df = pd.DataFrame(all_cases, index=temperatures)
+df.to_csv("thermo_prop_ce.csv")
 
 #Plotting Internal Energy
-plt.figure(figsize=(8, 6))
-plt.plot(temperatures, U_isolated, label='Isolated Ce', color='blue')
-plt.plot(temperatures, U_soc, label='Ce with SOC', color='orange')
-plt.plot(temperatures, U_cfs, label='Ce with SOC + CFS', color='green')
+plt.plot(temperatures, U_i, label='Isolated Ce', color='blue')
+plt.plot(temperatures, U_soc, label='Ce with SOC', color='pink')
+plt.plot(temperatures, U_cfs, label='Ce with SOC + CFS', color='purple')
 plt.title('Internal Energy vs Temperature')
 plt.xlabel('Temperature (K)')
 plt.ylabel('Internal Energy (J)')
@@ -100,12 +112,12 @@ plt.legend()
 plt.grid()
 plt.savefig("Internal_Energy.png")  
 plt.show()
+plt.close()
 
 # Plotting Free Energy
-plt.figure(figsize=(8, 6))
-plt.plot(temperatures, F_isolated, label='Isolated Ce', color='blue')
-plt.plot(temperatures, F_soc, label='Ce with SOC', color='orange')
-plt.plot(temperatures, F_cfs, label='Ce with SOC + CFS', color='green')
+plt.plot(temperatures, F_i, label='Isolated Ce', color='blue')
+plt.plot(temperatures, F_soc, label='Ce with SOC', color='pink')
+plt.plot(temperatures, F_cfs, label='Ce with SOC + CFS', color='purple')
 plt.title('Free Energy vs Temperature')
 plt.xlabel('Temperature (K)')
 plt.ylabel('Free Energy (J)')
@@ -113,12 +125,12 @@ plt.legend()
 plt.grid()
 plt.savefig("Free_Energy.png")  
 plt.show()
+plt.close()
 
 # Plotting Entropy
-plt.figure(figsize=(8, 6))
-plt.plot(temperatures, S_isolated, label='Isolated Ce', color='blue')
-plt.plot(temperatures, S_soc, label='Ce with SOC', color='orange')
-plt.plot(temperatures, S_cfs, label='Ce with SOC + CFS', color='green')
+plt.plot(temperatures, S_i, label='Isolated Ce', color='blue')
+plt.plot(temperatures, S_soc, label='Ce with SOC', color='pink')
+plt.plot(temperatures, S_cfs, label='Ce with SOC + CFS', color='purple')
 plt.title('Entropy vs Temperature')
 plt.xlabel('Temperature (K)')
 plt.ylabel('Entropy (J/K)')
@@ -126,5 +138,6 @@ plt.legend()
 plt.grid()
 plt.savefig("Entropy.png") 
 plt.show()
+plt.close()
 
 
