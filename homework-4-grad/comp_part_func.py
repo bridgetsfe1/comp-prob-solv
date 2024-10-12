@@ -41,7 +41,7 @@ def lennard_jones(r, epsilon, sigma):
 def partition_function(T):
     lamb = thermal_wavelength(T) 
 
-    coeff = (4 * np.pi) / ((h ** 6) * (lamb** 6))  
+    coeff = (4 * np.pi) / ((lamb** 6))  
 
     r_min = 0.001 * sigma  
     r_max = L_max
