@@ -10,7 +10,7 @@ sigma = 3.4e-10
 V = 1000 * 1e-30  
 T_min = 10
 T_max = 1000
-temps = np.linspace(T_min, T_max, 100) 
+temps = np.linspace(T_min, T_max, 990) 
 m = 39.948 * 1.6605e-27  # Mass of Argon in kg 
 L_max = np.cbrt(V)
 
@@ -63,7 +63,10 @@ partition_values = []
 for T in temps:
     partition_values.append(partition_function(T))
 
-df = pd.DataFrame({"Temperature (K)": temps, "Partition Function": partition_values})
+
+#Converse data into csv file
+df = pd.DataFrame({"Temperature (K)": temps, 
+                   "Partition Function": partition_values})
 df.to_csv("partition_function_values.csv")
 
 
