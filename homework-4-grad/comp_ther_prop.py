@@ -26,8 +26,6 @@ def U_and_Cv(temps):
     """
     #Create list to append partitions
     Z_values = []    
-    
-    # Calculate partition function and its logarithm for all temperatures
     for T in temps:
         Z_T = partition_function(T)
         Z_values.append(Z_T)
