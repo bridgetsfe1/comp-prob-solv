@@ -7,3 +7,6 @@ The method used to calculate importance sampling is normal distribution instead 
 
 # Overlap Integral versus Separation Distance
 As the distance between R increases, the overlap integral decreases, which is obvious because the further theparticles are the less overlap they have. There is a change in sign where the overlap integral is negative because when the orbitals are too far from each other anti-bonding interactions over run bonding interactions because the two particles are out of phase. 
+
+## Note
+Something to note is that the kernel crahses when trying to calculate for 10^8 points sampled. 9^8 was used to get lcose to 10^8. This could be because the code I wrote was not extremely efficient, thus working on writing efficient codes may make it possible to sample more points. In general though, it is clear that both methods converge before reachign this point, so it is unneccessary. 
